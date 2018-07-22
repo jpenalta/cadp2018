@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+			
+	<title>Quick Start - Leaflet</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+				
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+    	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js" integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q==" crossorigin=""></script>
+	<script src="data.json" ></script>
+	</head>
+	<body>
+		<div id="mapid" style="width: 800px; height: 500px;"></div>
+		<script>
+	var greenIcon = new L.Icon({
+	  	iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+	    	shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+	      	iconSize: [25, 41],
+	        iconAnchor: [12, 41],
+		popupAnchor: [1, -34],
+		shadowSize: [41, 41]
+		});
+	var blueIcon = new L.Icon({
+	  	iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+	    	shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+	      	iconSize: [25, 41],
+	        iconAnchor: [12, 41],
+		popupAnchor: [1, -34],
+		shadowSize: [41, 41]
+		});
+	var orangeIcon = new L.Icon({
+	  	iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
+	    	shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+	      	iconSize: [25, 41],
+	        iconAnchor: [12, 41],
+		popupAnchor: [1, -34],
+		shadowSize: [41, 41]
+		});
+	var redIcon = new L.Icon({
+	  	iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+	    	shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+	      	iconSize: [25, 41],
+	        iconAnchor: [12, 41],
+		popupAnchor: [1, -34],
+		shadowSize: [41, 41]
+		});
+
+	var mymap = L.map('mapid').setView([42.8645827,-8.5419787], 10);
+	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		id: 'mapbox.streets'
+		}).addTo(mymap);
+	for (n in DATA) {
+		centro = DATA[n];
+		var icon = {icon:greenIcon};
+		if(centro['tempo']['value']>1800){
+			icon = {icon:blueIcon};
+		}
+		if(centro['tempo']['value']>2700){
+			icon = {icon:orangeIcon};
+		}
+		if( centro['tempo']['value'] > 3600){
+			icon = {icon:redIcon};
+		}
+		var marker = L.marker(centro['coordenadas'].split(','), icon).addTo(mymap);
+		var ensinanzas ='<ul>';
+		for(ensinanza in  centro['ensinanzas']) {
+			ensinanzas+="<li>"+ensinanza+"</li>";
+		}
+		ensinanzas+="</ul>"
+		marker.bindPopup("<b>" + centro['codigo'] +" "+centro['nome']+ "(" + centro['concello'] +  ")</b><br>" +
+				"Tempo:" + centro['tempo']['text'] + 
+				"</br>Sen Peaxes:"+centro['tempoSenPeaxe']['text'] +
+				"</br>Distancia:"+centro['distancia']['text'] +
+				"<br>Ensinanzas:" + ensinanzas);
+	}
+		</script>
+
+	</body>
+</html>
+
